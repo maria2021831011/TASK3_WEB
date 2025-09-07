@@ -1,8 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 let tasks = require('../models/tasks.model');
 const { VALID_STATUSES, validateCreate, validateUpdate } = require('../utils/validators');
-
-// Helper: filter, search, sort
 function applyQuery(list, { status, search, sortBy, order }) {
   let result = [...list];
 
@@ -35,7 +33,6 @@ function applyQuery(list, { status, search, sortBy, order }) {
   return { data: result };
 }
 
-// CREATE
 const createTask = (req, res) => {
   const errors = validateCreate(req.body);
   if (errors.length) return res.status(400).json({ message: 'Validation failed', errors });
@@ -56,7 +53,6 @@ const createTask = (req, res) => {
   return res.status(201).json({ message: 'Task created', task });
 };
 
-// READ ALL
 const getTasks = (req, res) => {
   const { status, search, sortBy, order } = req.query;
   const { data, error } = applyQuery(tasks, { status, search, sortBy, order });
@@ -64,7 +60,7 @@ const getTasks = (req, res) => {
   return res.status(200).json({ count: data.length, tasks: data });
 };
 
-// READ ONE
+
 const getTaskById = (req, res) => {
   const { id } = req.params;
   const task = tasks.find(t => t.id === id);
@@ -72,7 +68,7 @@ const getTaskById = (req, res) => {
   return res.status(200).json({ task });
 };
 
-// UPDATE
+
 const updateTask = (req, res) => {
   const { id } = req.params;
   const errors = validateUpdate(req.body);
@@ -95,7 +91,7 @@ const updateTask = (req, res) => {
   return res.status(200).json({ message: 'Task updated', task });
 };
 
-// MARK COMPLETE
+
 const completeTask = (req, res) => {
   const { id } = req.params;
   let found = false;
@@ -109,7 +105,7 @@ const completeTask = (req, res) => {
   return res.status(200).json({ message: 'Task marked as completed', task });
 };
 
-// DELETE
+
 const deleteTask = (req, res) => {
   const { id } = req.params;
   const before = tasks.length;
